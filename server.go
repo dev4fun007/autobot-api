@@ -30,7 +30,7 @@ func NewApiServer(port string, r *mux.Router) ConfigApiServer {
 	}
 }
 
-func (apiServer ConfigApiServer) StartApiServer(ctx context.Context) {
+func (apiServer ConfigApiServer) StartApiServer() {
 	go func() {
 		log.Info().Str(common.LogComponent, ServerTag).Msg("starting config server...")
 		if err := apiServer.Server.ListenAndServe(); err != nil {
