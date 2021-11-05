@@ -11,15 +11,15 @@ import (
 )
 
 const (
-	ServerTag = "ApiServer"
+	ServerTag = "RestApiServer"
 )
 
-type ConfigApiServer struct {
+type RestApiServer struct {
 	*http.Server
 }
 
-func NewApiServer(port string, r *mux.Router) ConfigApiServer {
-	return ConfigApiServer{
+func NewRestApiServer(port string, r *mux.Router) RestApiServer {
+	return RestApiServer{
 		Server: &http.Server{
 			Addr:         fmt.Sprintf("0.0.0.0:%s", port),
 			WriteTimeout: time.Second * 15,
@@ -30,7 +30,7 @@ func NewApiServer(port string, r *mux.Router) ConfigApiServer {
 	}
 }
 
-func (apiServer ConfigApiServer) StartApiServer() {
+func (apiServer RestApiServer) StartRestApiServer() {
 	go func() {
 		log.Info().Str(common.LogComponent, ServerTag).Msg("starting config server...")
 		if err := apiServer.Server.ListenAndServe(); err != nil {
@@ -39,6 +39,6 @@ func (apiServer ConfigApiServer) StartApiServer() {
 	}()
 }
 
-func (apiServer ConfigApiServer) ShutdownApiServer(ctx context.Context) {
+func (apiServer RestApiServer) ShutdownRestApiServer(ctx context.Context) {
 	_ = apiServer.Server.Shutdown(ctx)
 }
