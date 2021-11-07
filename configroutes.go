@@ -13,6 +13,8 @@ const (
 
 func NewConfigApiRouter(configApiHandler ConfigApiHandler) *mux.Router {
 	r := mux.NewRouter()
+	r = LogLevelRouteHandler(r)
+
 	// register routes and handler
 	s := r.PathPrefix("/config").Subrouter()
 	s.HandleFunc(fmt.Sprintf("/strategy/{%s}", StrategyTypePathParam), configApiHandler.SaveConfig).
