@@ -2,7 +2,7 @@ package api
 
 import (
 	"errors"
-	common "github.com/dev4fun007/autobot-common"
+	"github.com/dev4fun007/autobot-common"
 )
 
 var (
@@ -11,7 +11,7 @@ var (
 	StrategyTypeNotFound = errors.New("name path parameter not found")
 )
 
-func ValidateStrategyType(params map[string]string) (common.StrategyType, error) {
+func ValidateStrategyType(strategyTypeList []common.StrategyType, params map[string]string) (common.StrategyType, error) {
 	strategyTypeString := params[StrategyTypePathParam]
 	if strategyTypeString == "" {
 		return common.InvalidStrategy, StrategyTypeNotFound
@@ -19,7 +19,7 @@ func ValidateStrategyType(params map[string]string) (common.StrategyType, error)
 
 	found := false
 	var strategyType common.StrategyType
-	for _, val := range common.StrategyTypeList {
+	for _, val := range strategyTypeList {
 		if string(val) == strategyTypeString && val != common.InvalidStrategy {
 			strategyType = val
 			found = true

@@ -9,20 +9,22 @@ import (
 )
 
 type ConfigApiHandler struct {
-	ctx        context.Context
-	apiService common.ApiService
+	ctx              context.Context
+	apiService       common.ApiService
+	strategyTypeList []common.StrategyType
 }
 
-func NewConfigApiHandler(ctx context.Context, apiService common.ApiService) ConfigApiHandler {
+func NewConfigApiHandler(ctx context.Context, apiService common.ApiService, strategyTypeList []common.StrategyType) ConfigApiHandler {
 	return ConfigApiHandler{
-		apiService: apiService,
-		ctx:        ctx,
+		ctx:              ctx,
+		apiService:       apiService,
+		strategyTypeList: strategyTypeList,
 	}
 }
 
 func (h ConfigApiHandler) SaveConfig(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	strategyType, err := ValidateStrategyType(params)
+	strategyType, err := ValidateStrategyType(h.strategyTypeList, params)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		_, _ = w.Write([]byte(err.Error()))
@@ -55,7 +57,7 @@ func (h ConfigApiHandler) UpdateConfig(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	strategyType, err := ValidateStrategyType(params)
+	strategyType, err := ValidateStrategyType(h.strategyTypeList, params)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		_, _ = w.Write([]byte(err.Error()))
@@ -88,7 +90,7 @@ func (h ConfigApiHandler) GetConfigByNameAndType(w http.ResponseWriter, r *http.
 		return
 	}
 
-	strategyType, err := ValidateStrategyType(params)
+	strategyType, err := ValidateStrategyType(h.strategyTypeList, params)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		_, _ = w.Write([]byte(err.Error()))
@@ -109,7 +111,7 @@ func (h ConfigApiHandler) GetConfigByNameAndType(w http.ResponseWriter, r *http.
 
 func (h ConfigApiHandler) GetConfigByType(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	strategyType, err := ValidateStrategyType(params)
+	strategyType, err := ValidateStrategyType(h.strategyTypeList, params)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		_, _ = w.Write([]byte(err.Error()))
@@ -137,7 +139,7 @@ func (h ConfigApiHandler) DeleteConfigByNameAndType(w http.ResponseWriter, r *ht
 		return
 	}
 
-	strategyType, err := ValidateStrategyType(params)
+	strategyType, err := ValidateStrategyType(h.strategyTypeList, params)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		_, _ = w.Write([]byte(err.Error()))
